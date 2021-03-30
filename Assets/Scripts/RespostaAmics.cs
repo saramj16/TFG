@@ -5,10 +5,7 @@ using UnityEngine;
 public class RespostaAmics : MonoBehaviour
 {
     public GameObject target;
-    
-    public List<Missatge> missatges;
-    public VisualMissatge vm;
-    
+      
     public bool isEnter = false;
     bool haArribat = false;
     bool enPosicio = false;
@@ -48,11 +45,9 @@ public class RespostaAmics : MonoBehaviour
         switch (option)
         {
             case 0:
-                //Debug.Log("Cas 0: Anem cap als amics");
                 ArribaAmics();
                 break;
             case 1:
-               // Debug.Log("Cas 1: T'acostes cap als amics i els mires en cas q no els estiguesis mirant");
                 PosicionarPersonatge();
                 break;
             case 2:
@@ -114,8 +109,6 @@ public class RespostaAmics : MonoBehaviour
                 childCamera.gameObject.GetComponent<MirantPersonatge>().desactivat = true;
                 childCamera.gameObject.GetComponent<CameraController>().desactivat = true;
 
-                vm.CreaMissatge("Hora de marxar");
-
                 Invoke("CanviaOption", 1f);
 
             }
@@ -168,9 +161,7 @@ public class RespostaAmics : MonoBehaviour
             childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 3f);
 
             if (dist < 1f){
-                // Conversa de despedida i marxen
-                vm.CreaMissatge("Amic 1 : Nosaltres ja marxem a casa.");
-                vm.CreaMissatge("Amic 2 : Avisa'ns quan arribis.");
+
                 haArribat = true;
 
                 MourePersonatges(waypoints.gameObject.transform.GetChild(4).transform.position, waypoints.gameObject.transform.GetChild(5).transform.position);
