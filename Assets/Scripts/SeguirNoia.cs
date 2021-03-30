@@ -8,7 +8,8 @@ public class SeguirNoia : MonoBehaviour
     public Collider colliderGrup;
     public GameObject personatge;
     public GameObject desconegut;
-    public float speed = 20f;
+
+    private float speed = 8f;
     // Start is called before the first frame update
     void Start()
     {
