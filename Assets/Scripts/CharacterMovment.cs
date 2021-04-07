@@ -56,4 +56,9 @@ public class CharacterMovment : MonoBehaviour
         } 
         
     }
+
+    public void AcabesMalament()
+    {
+        Debug.Log("Pos rip pq tha violat");
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Fungus;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +21,8 @@ public class RespostaAmics : MonoBehaviour
     private GameObject amic1;
     private GameObject amic2;
 
-    
+    private bool posicionats = false;
+
     float speed = 7f;
 
     public GameObject childCamera;
@@ -51,7 +53,7 @@ public class RespostaAmics : MonoBehaviour
                 PosicionarPersonatge();
                 break;
             case 2:
-                //Debug.Log("Cas 2: Anem cap a waypoint");
+                Debug.Log("Cas 2: Anem cap a waypoint");
                 GoToWaypoint();
                 break;
             case 3:
@@ -67,11 +69,20 @@ public class RespostaAmics : MonoBehaviour
     void MourePersonatges(Vector3 p1, Vector3 p2)
     {
         //Posicionar els amics tmb
-        Quaternion rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
-        amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * 70f);
 
-        Quaternion rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
-        amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * 70f);
+       // Debug.Log("Rotar amics personatge");
+        Quaternion rotationAmic1;
+         do
+          {
+           rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
+           amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * 70f);
+
+           Quaternion rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
+           amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * 70f);
+          } while (amic1.transform.rotation != rotationAmic1);
+
+        posicionats = true;
+
     }
     private void PosicionarPersonatge()
     {
@@ -79,15 +90,21 @@ public class RespostaAmics : MonoBehaviour
         {
            // Debug.Log("Waypoint: " + waypoints.gameObject.transform.GetChild(0).name);
             target.transform.position = Vector3.MoveTowards(target.transform.position, waypoints.gameObject.transform.GetChild(0).position, (speed / 2) * Time.deltaTime);
-            Quaternion targetRotation = Quaternion.LookRotation(this.gameObject.transform.position - childCamera.transform.position);
-            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 3f);
+
+            Vector3 puntMig = amic2.transform.position - amic1.transform.position;
+            puntMig.x = amic1.transform.position.x + (puntMig.x / 2);
+            puntMig.y = 2.85f;
+            puntMig.z = amic1.transform.position.z + puntMig.z / 2;
+
+            Quaternion targetRotation = Quaternion.LookRotation(puntMig - childCamera.transform.position);
+            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 4f);
 
             //Posicionar els amics tmb
             MourePersonatges(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position);
 
-            
+            //Debug.Log("Seguim i es mouen");
             float dist = Vector3.Distance(target.gameObject.transform.position, waypoints.gameObject.transform.GetChild(0).position);
-            if (dist < 1f)
+            if (dist < 10f && posicionats)
             {
                 enPosicio = true;
                 //Debug.Log("Anem a la seguent opció");
@@ -106,7 +123,7 @@ public class RespostaAmics : MonoBehaviour
                 isEnter = true;
 
                 target.gameObject.GetComponent<CharacterMovment>().blockMovment = false;
-                childCamera.gameObject.GetComponent<MirantPersonatge>().desactivat = true;
+
                 childCamera.gameObject.GetComponent<CameraController>().desactivat = true;
 
                 Invoke("CanviaOption", 1f);
@@ -122,6 +139,8 @@ public class RespostaAmics : MonoBehaviour
 
         if(haArribat == false)
         {
+            target.gameObject.GetComponent<Flowchart>().SetBooleanVariable("Conversa", true);
+
             animatorAmic1.SetBool("isWalking", true);
             animatorAmic2.SetBool("isWalking", true);
             
@@ -164,7 +183,7 @@ public class RespostaAmics : MonoBehaviour
 
                 haArribat = true;
 
-                MourePersonatges(waypoints.gameObject.transform.GetChild(4).transform.position, waypoints.gameObject.transform.GetChild(5).transform.position);
+                MourePersonatges(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position);
                 Invoke("CanviaOption", 4f);
             }
         }  
@@ -178,7 +197,7 @@ public class RespostaAmics : MonoBehaviour
         if (dist < 30f)
         {
             target.gameObject.GetComponent<CharacterMovment>().blockMovment = true;
-            childCamera.gameObject.GetComponent<MirantPersonatge>().desactivat = false;
+
             childCamera.gameObject.GetComponent<CameraController>().desactivat = false;
             //childCamera.gameObject.GetComponent<CameraController>().GuardaPosicio(childCamera.transform.position, childCamera.transform.rotation);
             option = 3;
