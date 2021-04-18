@@ -53,7 +53,7 @@ public class RespostaAmics : MonoBehaviour
                 PosicionarPersonatge();
                 break;
             case 2:
-                Debug.Log("Cas 2: Anem cap a waypoint");
+               // Debug.Log("Cas 2: Anem cap a waypoint");
                 GoToWaypoint();
                 break;
             case 3:
@@ -102,12 +102,13 @@ public class RespostaAmics : MonoBehaviour
             //Posicionar els amics tmb
             MourePersonatges(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position);
 
-            //Debug.Log("Seguim i es mouen");
+            
             float dist = Vector3.Distance(target.gameObject.transform.position, waypoints.gameObject.transform.GetChild(0).position);
+           // Debug.Log("Seguim i es mouen: "  + dist);
             if (dist < 10f && posicionats)
             {
                 enPosicio = true;
-                //Debug.Log("Anem a la seguent opció");
+               // Debug.Log("Anem cap al waypoint");
                 Invoke("CanviaOption", 1f);
             }
         }
@@ -139,8 +140,6 @@ public class RespostaAmics : MonoBehaviour
 
         if(haArribat == false)
         {
-            target.gameObject.GetComponent<Flowchart>().SetBooleanVariable("Conversa", true);
-
             animatorAmic1.SetBool("isWalking", true);
             animatorAmic2.SetBool("isWalking", true);
             
