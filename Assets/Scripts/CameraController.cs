@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
     public GameObject panelDialeg;
     public GameObject panelResposta;
 
+    public GameObject cameraSecundaria;
+
     public float clamp;
 
     public bool desactivat;
@@ -29,22 +31,28 @@ public class CameraController : MonoBehaviour
         if (!panelDialeg.activeSelf && !panelResposta.activeSelf)
         {
             Cursor.visible = false;
-            float mouseX = Input.GetAxis("Mouse X") * sensibilitatMouse * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * sensibilitatMouse * Time.deltaTime;
-
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -clamp, clamp);
-
-            yRotation -= mouseX;
-            yRotation = Mathf.Clamp(yRotation, -clamp, clamp);
-
             if (desactivat == false)
             {
+                this.gameObject.GetComponent<Camera>().enabled = true;
+
+                float mouseX = Input.GetAxis("Mouse X") * sensibilitatMouse * Time.deltaTime;
+                float mouseY = Input.GetAxis("Mouse Y") * sensibilitatMouse * Time.deltaTime;
+
+                xRotation -= mouseY;
+                xRotation = Mathf.Clamp(xRotation, -clamp, clamp);
+
+                yRotation -= mouseX;
+                yRotation = Mathf.Clamp(yRotation, -clamp, clamp);
+
                 transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
                 player.Rotate(Vector3.up * mouseX);
             } else
             {
-                transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+                //Activar l'altre camera?
+                //cameraSecundaria.gameObject.GetComponent<CameraSecundaria>().desactivat = false;
+                //this.gameObject.GetComponent<Camera>().enabled = false;
+                
+                //transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
             }
         } else
         {
@@ -54,14 +62,10 @@ public class CameraController : MonoBehaviour
     
     }
 
-    public void ChangeClamp(float value, float min, float max)
-    {
-        xRotation = Mathf.Clamp(value, min, max);
-    }
-    public void GuardaPosicio(Vector3 pos, Quaternion rot)
+    public void OnHaDeMirar(GameObject cam)
     {
         //Debug.Log("Entra aqui");
-        this.transform.position = pos;
-        this.transform.rotation = rot;
+        this.gameObject.transform.position = cam.transform.position;
+        this.gameObject.transform.rotation = cam.transform.rotation;
     }
 }

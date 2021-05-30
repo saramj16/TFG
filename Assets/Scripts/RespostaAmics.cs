@@ -29,6 +29,8 @@ public class RespostaAmics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+       // Debug.Log("Start de Resposta AMICS");
         isEnter = false;
         haArribat = false;
         enPosicio = false;
@@ -44,6 +46,7 @@ public class RespostaAmics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       // Debug.Log("Option: " + option);
         switch (option)
         {
             case 0:
@@ -66,22 +69,52 @@ public class RespostaAmics : MonoBehaviour
         }
     }
 
-    void MourePersonatges(Vector3 p1, Vector3 p2)
+    void MourePersonatges(Vector3 p1, Vector3 p2, float velRotacio)
+    {
+        //Posicionar els amics tmb
+       
+
+        Quaternion rotationAmic2;
+        
+        //Debug.Log("Rotar amics personatge");
+        Quaternion rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
+        amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * velRotacio);
+
+        rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
+        amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * velRotacio);
+
+  
+        if(amic2.transform.rotation == rotationAmic2){
+            posicionats = true;
+        }
+        
+
+    }
+
+    IEnumerator MourePersonatges2(Vector3 p1, Vector3 p2, float velRotacio)
     {
         //Posicionar els amics tmb
 
-       // Debug.Log("Rotar amics personatge");
-        Quaternion rotationAmic1;
-         do
-          {
-           rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
-           amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * 70f);
 
-           Quaternion rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
-           amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * 70f);
-          } while (amic1.transform.rotation != rotationAmic1);
+        Quaternion rotationAmic2 = Quaternion.LookRotation(p2);
+        while (amic2.transform.rotation != rotationAmic2)
+        {
+            //Debug.Log("Rotar amics personatge moure 2");
+            Quaternion rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
+            amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * velRotacio);
 
-        posicionats = true;
+            rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
+            amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * velRotacio);
+
+
+            yield return null;
+        }
+
+        if (amic2.transform.rotation == rotationAmic2)
+        {
+            posicionats = true;
+        }
+
 
     }
     private void PosicionarPersonatge()
@@ -100,7 +133,8 @@ public class RespostaAmics : MonoBehaviour
             childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 4f);
 
             //Posicionar els amics tmb
-            MourePersonatges(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position);
+            //Debug.Log("Moure personatges 1");
+            StartCoroutine(MourePersonatges2(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position, 1f));
 
             
             float dist = Vector3.Distance(target.gameObject.transform.position, waypoints.gameObject.transform.GetChild(0).position);
@@ -115,12 +149,18 @@ public class RespostaAmics : MonoBehaviour
     }
     public void ArribaAmics()
     {
-        float dist = Vector3.Distance(target.gameObject.transform.position, this.transform.position);
+
+        //Debug.Log("Arriba AMICS");
+
+        float dist = Vector3.Distance(target.gameObject.transform.position, this.transform.GetChild(0).position);
+
 
         if (dist < 20f)
         {
+            //Debug.Log("Ha entrat a Arriba amics distanica mes petita de 20");
             if (isEnter == false)
             {
+                //Debug.Log("Ha entrat a arriba amics i es mouran en breves");
                 isEnter = true;
 
                 target.gameObject.GetComponent<CharacterMovment>().blockMovment = false;
@@ -176,14 +216,17 @@ public class RespostaAmics : MonoBehaviour
             puntMig.z = amic1.transform.position.z + puntMig.z/2;
 
             Quaternion targetRotation = Quaternion.LookRotation(puntMig - childCamera.transform.position);
-            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 3f);
+            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 6f);
 
             if (dist < 1f){
 
                 haArribat = true;
-
-                MourePersonatges(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position);
-                Invoke("CanviaOption", 4f);
+                StartCoroutine(MourePersonatges2(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position, 20f));
+               
+               
+                    Invoke("CanviaOption", 5f);
+                
+                
             }
         }  
         
@@ -191,7 +234,7 @@ public class RespostaAmics : MonoBehaviour
 
     public void Marxen()
     {
-                
+        Debug.Log("Marxen");
         float dist = Mathf.Abs(Vector3.Distance(amic1.transform.position, waypoints.gameObject.transform.GetChild(4).transform.position));
         if (dist < 30f)
         {
@@ -204,7 +247,7 @@ public class RespostaAmics : MonoBehaviour
 
             animatorAmic1.SetBool("isWalking", false);
             animatorAmic2.SetBool("isWalking", false);
-            Destroy(this);
+            //Destroy(this);
             // Debug.Log("Ja pots marxar");
             //vm.CreaMissatge("Hora d'anar a casa.");
 
@@ -222,7 +265,7 @@ public class RespostaAmics : MonoBehaviour
             puntMig.z = amic1.transform.position.z + puntMig.z / 2;
             
             Quaternion targetRotation = Quaternion.LookRotation(puntMig - childCamera.transform.position);
-            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 3f);
+            childCamera.gameObject.transform.rotation = Quaternion.RotateTowards(childCamera.gameObject.transform.rotation, targetRotation, Time.deltaTime * 7f);
 
         }
 

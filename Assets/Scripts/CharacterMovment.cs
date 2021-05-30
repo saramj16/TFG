@@ -52,6 +52,13 @@ public class CharacterMovment : MonoBehaviour
                    // Debug.Log("Lento");
                     speed = speedNormal;
                 }
+
+                // Aqui hem d'activar el tema de la noia, de portar les claus a la mà i poder atacar
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    
+                }
+                // Aqui hem d'activar el tema de a noia d'estar amb el mobil
             }
         } 
         
