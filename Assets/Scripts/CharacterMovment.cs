@@ -17,10 +17,18 @@ public class CharacterMovment : MonoBehaviour
 
     public GameObject panelDialeg;
     public GameObject panelResposta;
+
+    public bool keysReady;
+    
+    Animator anim;
+    public GameObject keys;
     private void Start()
     {
+        keys.gameObject.SetActive(false);
         speed = speedNormal;
         blockMovment = true;
+        //Debug.Log("Nom: " + this.transform.GetChild(0).gameObject.name);
+        anim = this.gameObject.GetComponent<Animator>();
     }
 
     void Update()
@@ -31,10 +39,16 @@ public class CharacterMovment : MonoBehaviour
 
             if (blockMovment == true)
             {
-                float x = Input.GetAxis("Horizontal");
-                float z = Input.GetAxis("Vertical");
+                float x = Input.GetAxisRaw("Horizontal");
+                float y = Input.GetAxisRaw("Vertical");
+                
+               // Debug.Log("X: " + x);
+               // Debug.Log("Y: " + y);
 
-                Vector3 movement = transform.right * x + transform.forward * z;
+                anim.SetFloat("x", x);
+                anim.SetFloat("y", y);
+
+                Vector3 movement = transform.right * x + transform.forward * y;
 
                 controller.Move(movement * speed * Time.deltaTime);
 
@@ -56,11 +70,55 @@ public class CharacterMovment : MonoBehaviour
                 // Aqui hem d'activar el tema de la noia, de portar les claus a la mà i poder atacar
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
-                    
+                    if(keysReady == true){
+                        //Activem atac
+                        Debug.Log("Ataquem");
+                        anim.SetBool("ataca", true);
+                        Invoke("AtacFalse", 1.6f); 
+                    } else {
+                        keysReady = true;
+                        anim.SetBool("searchPocket", true);
+                        //Posem les claus a la mà
+                        Invoke("SearchFalse", 0.8f);
+                    }
                 }
-                // Aqui hem d'activar el tema de a noia d'estar amb el mobil
+
+
+                if (Input.GetKeyUp(KeyCode.Escape))
+                {
+                    if (keysReady == true)
+                    {
+                        keysReady = false;
+                        anim.SetBool("searchPocket", true);
+                        //Posem les claus a la mà
+                        Invoke("SearchFalse", 0.8f);
+
+                    }
+
+                }
+                
             }
         } 
+        
+    }
+
+    public void AtacFalse()
+    {
+        Debug.Log("JA NO ATAQUEM");
+        anim.SetBool("ataca", false);
+    }
+
+    public void SearchFalse()
+    {
+        anim.SetBool("searchPocket", false);
+        //ClausVisibles
+        if(keysReady == true)
+        {
+            keys.gameObject.SetActive(true);
+        } else
+        {
+            keys.gameObject.SetActive(false);
+        }
         
     }
 

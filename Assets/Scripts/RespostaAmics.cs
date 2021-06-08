@@ -234,7 +234,7 @@ public class RespostaAmics : MonoBehaviour
 
     public void Marxen()
     {
-        Debug.Log("Marxen");
+        //Debug.Log("Marxen");
         float dist = Mathf.Abs(Vector3.Distance(amic1.transform.position, waypoints.gameObject.transform.GetChild(4).transform.position));
         if (dist < 30f)
         {

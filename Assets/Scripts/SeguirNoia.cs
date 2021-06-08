@@ -52,11 +52,12 @@ public class SeguirNoia : MonoBehaviour
                     float dot = Vector3.Dot(personatge.transform.forward, (desconegut.transform.position - personatge.transform.position).normalized);
                     if (dot < 0.7f)
                     {
-                        //    Debug.Log("Em moc");
+                        Debug.Log("Em moc");
                         desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, personatge.transform.position, speed * Time.deltaTime);
                     }
                 }
             }
+
             if(final == true)
             {
                 //Se'n torna cap a caseta o fem destroý
