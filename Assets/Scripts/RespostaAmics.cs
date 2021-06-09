@@ -64,6 +64,8 @@ public class RespostaAmics : MonoBehaviour
                 Marxen();
                 break;
             case 4:
+
+       
                 break;
 
         }
@@ -224,7 +226,7 @@ public class RespostaAmics : MonoBehaviour
                 StartCoroutine(MourePersonatges2(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position, 20f));
                
                
-                    Invoke("CanviaOption", 5f);
+                Invoke("CanviaOption", 5f);
                 
                 
             }
@@ -247,6 +249,9 @@ public class RespostaAmics : MonoBehaviour
 
             animatorAmic1.SetBool("isWalking", false);
             animatorAmic2.SetBool("isWalking", false);
+
+            amic1.gameObject.SetActive(false);
+            amic2.gameObject.SetActive(false);
             //Destroy(this);
             // Debug.Log("Ja pots marxar");
             //vm.CreaMissatge("Hora d'anar a casa.");

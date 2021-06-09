@@ -1,15 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterMovment : MonoBehaviour
 {
     public CharacterController controller;
 
     float speed = 0f;
-    float speedNormal = 5f;
+    float speedNormal = 30f;
     float speedFast = 30f;
     float gravity = -9.81f;
+
+    bool activaFast = false;
+    bool coolDown = false;
+    public float tiempo = 0f;
+    public float tiempoMaxim = 5f;
+
+    public Image barra;
 
     public bool blockMovment = true;
 
@@ -39,72 +47,134 @@ public class CharacterMovment : MonoBehaviour
 
             if (blockMovment == true)
             {
-                float x = Input.GetAxisRaw("Horizontal");
-                float y = Input.GetAxisRaw("Vertical");
-                
-               // Debug.Log("X: " + x);
-               // Debug.Log("Y: " + y);
+                Moviment();
 
-                anim.SetFloat("x", x);
-                anim.SetFloat("y", y);
+                ControlVelocitat();
+                ControlTempsVelocitat();
+                ActualitzaBarra();
+                ControlKeys();
 
-                Vector3 movement = transform.right * x + transform.forward * y;
-
-                controller.Move(movement * speed * Time.deltaTime);
-
-                velocity.y += gravity * Time.deltaTime;
-
-                controller.Move(velocity * Time.deltaTime);
-
-                if (Input.GetKeyDown(KeyCode.LeftShift))
-                {
-                    //Debug.Log("Fast");
-                    speed = speedFast;
-                }
-                if (Input.GetKeyUp(KeyCode.LeftShift))
-                {
-                   // Debug.Log("Lento");
-                    speed = speedNormal;
-                }
-
-                // Aqui hem d'activar el tema de la noia, de portar les claus a la mà i poder atacar
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    if(keysReady == true){
-                        //Activem atac
-                        Debug.Log("Ataquem");
-                        anim.SetBool("ataca", true);
-                        Invoke("AtacFalse", 1.6f); 
-                    } else {
-                        keysReady = true;
-                        anim.SetBool("searchPocket", true);
-                        //Posem les claus a la mà
-                        Invoke("SearchFalse", 0.8f);
-                    }
-                }
-
-
-                if (Input.GetKeyUp(KeyCode.Escape))
-                {
-                    if (keysReady == true)
-                    {
-                        keysReady = false;
-                        anim.SetBool("searchPocket", true);
-                        //Posem les claus a la mà
-                        Invoke("SearchFalse", 0.8f);
-
-                    }
-
-                }
-                
             }
         } 
         
     }
 
+    void ControlTempsVelocitat()
+    {
+        if (activaFast == true)
+        {
+            tiempo += Time.deltaTime;
+            if (tiempo >= tiempoMaxim)
+            {
+                coolDown = true;
+                activaFast = false;
+            }
+        } else {
+            speed = speedNormal;
+        }
+
+        if (coolDown == true)
+        {
+            tiempo -= Time.deltaTime;
+            if(tiempo <= 0)
+            {
+                coolDown = false;
+            }
+        }
+    }
+
+    void ActualitzaBarra()
+    {
+        barra.rectTransform.sizeDelta = new Vector2(100 -(tiempo*20), 10);
+    }
+    void Moviment()
+    {
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+
+        //Debug.Log("X: " + x);
+        //Debug.Log("Y: " + y);
+        Debug.Log("Dialeg: " + panelDialeg.activeSelf);
+        Debug.Log("Resposta: " + panelResposta.activeSelf);
+
+
+        anim.SetFloat("x", x);
+        anim.SetFloat("y", y);
+      
+
+
+        Vector3 movement = transform.right * x + transform.forward * y;
+
+        controller.Move(movement * speed * Time.deltaTime);
+
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    public void StopNoia()
+    {
+        anim.SetFloat("x", 0);
+        anim.SetFloat("y", 0);
+    }
+    void ControlKeys()
+    {
+        // Aqui hem d'activar el tema de la noia, de portar les claus a la mà i poder atacar
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (keysReady == true)
+            {
+                //Activem atac
+                Debug.Log("Ataquem");
+                anim.SetBool("ataca", true);
+                Invoke("AtacFalse", 1.6f);
+            }
+            else
+            {
+                keysReady = true;
+                anim.SetBool("searchPocket", true);
+                //Posem les claus a la mà
+                Invoke("SearchFalse", 0.8f);
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (keysReady == true)
+            {
+                keysReady = false;
+                anim.SetBool("searchPocket", true);
+                //Posem les claus a la mà
+                Invoke("SearchFalse", 0.8f);
+
+            }
+
+        }
+    }
+    void ControlVelocitat()
+    {
+        if(coolDown == false)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                //Debug.Log("Fast");
+                activaFast = true;
+                speed = speedFast;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            //Debug.Log("Lento");
+            activaFast = false;
+            speed = speedNormal;
+            coolDown = true;
+        }
+
+    }
     public void AtacFalse()
     {
-        Debug.Log("JA NO ATAQUEM");
+        //Debug.Log("JA NO ATAQUEM");
         anim.SetBool("ataca", false);
     }
 

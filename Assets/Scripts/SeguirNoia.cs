@@ -30,10 +30,15 @@ public class SeguirNoia : MonoBehaviour
         if(this.gameObject.transform.tag == colliderGrup.transform.tag)
         {
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
-            haArribat = true;
+            
             personatge = other.gameObject;
         }
 
+    }
+
+    public void HaArribat()
+    {
+        haArribat = true;
     }
     // Update is called once per frame
     void Update()

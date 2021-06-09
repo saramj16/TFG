@@ -21,6 +21,8 @@ public class CharacterPositions : MonoBehaviour
         Vector3 aux = personatge.transform.position;
         aux.y = y;
         this.transform.position = aux;
+
+        this.transform.rotation = personatge.transform.rotation;
         
         
     }

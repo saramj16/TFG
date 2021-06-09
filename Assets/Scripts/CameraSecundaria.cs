@@ -12,6 +12,7 @@ public class CameraSecundaria : MonoBehaviour
 
     GameObject personatge;
     public GameObject missatges;
+    public GameObject respostes;
     public GameObject nameText;
 
 
@@ -31,8 +32,9 @@ public class CameraSecundaria : MonoBehaviour
         if (desactivat == true)
         {
             CopiaMainCamera();
-            
-        } else
+
+        }
+        else
         {
             CopiaMainCamera();
 
@@ -42,15 +44,15 @@ public class CameraSecundaria : MonoBehaviour
             //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
             //Debug.Log("Personatge: " + personatge.name);
             //Debug.Log("Position: " + personatge.transform.position);
- 
+
             this.gameObject.transform.rotation = personatge.transform.rotation;
 
-            this.gameObject.transform.position = personatge.transform.position + new Vector3(4, 0, 4); 
+            this.gameObject.transform.position = personatge.transform.position + personatge.transform.forward * 10 + personatge.transform.right * 4;
 
             this.gameObject.transform.LookAt(personatge.transform);
 
-           // Debug.Log("camera secundaria activada: " + personatge.name);
-   
+            // Debug.Log("camera secundaria activada: " + personatge.name);
+
 
         }
     }
@@ -60,13 +62,14 @@ public class CameraSecundaria : MonoBehaviour
 
     void MirarSiParlaAlgu()
     {
-        if(conversaAmics == true)
+        if (conversaAmics == true)
         {
             desactivat = true;
             mainCamera.GetComponent<Camera>().enabled = true;
             personatge = null;
 
-        } else
+        }
+        else
         {
             if (missatges.activeSelf == true)
             {
@@ -75,12 +78,18 @@ public class CameraSecundaria : MonoBehaviour
                 BuscarPersonatgeQueParla();
                 //Debug.Log(personatge.name + " esta parlant");
 
-            }
-            else
-            {
-                desactivat = true;
-                mainCamera.GetComponent<Camera>().enabled = true;
-                personatge = null;
+            } else {
+                if(respostes.activeSelf == true)
+                {
+                    desactivat = false;
+                    mainCamera.GetComponent<Camera>().enabled = false;
+                    personatge = GameObject.Find("/Characters/Tu");
+                } else
+                {
+                    desactivat = true;
+                    mainCamera.GetComponent<Camera>().enabled = true;
+                    personatge = null;
+                }  
             }
         }
 
@@ -93,15 +102,21 @@ public class CameraSecundaria : MonoBehaviour
 
     void BuscarPersonatgeQueParla()
     {
-        
-            personatge = GameObject.Find("/Characters/" + nameText.GetComponent<Text>().text);
-            //Debug.Log("Ha trobat el personatge: " + nameText.GetComponent<Text>().text);
-          
+
+        personatge = GameObject.Find("/Characters/" + nameText.GetComponent<Text>().text);
+        //Debug.Log("Ha trobat el personatge: " + nameText.GetComponent<Text>().text);
+
     }
 
     void ActivaConversaAmics()
     {
         //Debug.Log("Activada la Conversa per no canviar de camera");
         conversaAmics = true;
+    }
+
+    void DesactivaConversaAmics()
+    {
+
+        conversaAmics = false;
     }
 }
