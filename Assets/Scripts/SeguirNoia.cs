@@ -12,9 +12,13 @@ public class SeguirNoia : MonoBehaviour
     public GameObject personatge;
     public GameObject desconegut;
 
+    public float tiempo = 0f;
+    public float tiempoMaxim = 5f;
+
     private Vector3 posicioIniciDesconegut;
 
     private float speed = 8f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +33,11 @@ public class SeguirNoia : MonoBehaviour
 
         if(this.gameObject.transform.tag == colliderGrup.transform.tag)
         {
+            //Debug.Log("Tag: " + this.gameObject.transform.tag + " / Collider: " + colliderGrup.transform.tag);
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
             
             personatge = other.gameObject;
+
         }
 
     }
@@ -59,6 +65,8 @@ public class SeguirNoia : MonoBehaviour
                     {
                         Debug.Log("Em moc");
                         desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, personatge.transform.position, speed * Time.deltaTime);
+
+
                     }
                 }
             }
@@ -75,6 +83,16 @@ public class SeguirNoia : MonoBehaviour
                     desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, posicioIniciDesconegut, speed * Time.deltaTime);
                 }
 
+            } else {
+                /*
+                //Cada X segons dir alguna cosa
+                tiempo += Time.deltaTime;
+                if (tiempo >= tiempoMaxim)
+                {
+                    tiempo = 0;
+                    
+                    Debug.Log("Guarra");
+                }*/
             }
 
         }

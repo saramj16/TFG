@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterMovment : MonoBehaviour
@@ -94,10 +95,7 @@ public class CharacterMovment : MonoBehaviour
 
         //Debug.Log("X: " + x);
         //Debug.Log("Y: " + y);
-        Debug.Log("Dialeg: " + panelDialeg.activeSelf);
-        Debug.Log("Resposta: " + panelResposta.activeSelf);
-
-
+       
         anim.SetFloat("x", x);
         anim.SetFloat("y", y);
       
@@ -194,6 +192,7 @@ public class CharacterMovment : MonoBehaviour
 
     public void AcabesMalament()
     {
-        Debug.Log("Pos rip pq tha violat");
+        SceneManager.LoadScene("Final_Dolent");
+        //Debug.Log("Pos rip pq tha violat");
     }
 }

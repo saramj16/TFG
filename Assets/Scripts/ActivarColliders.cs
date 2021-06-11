@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class ActivarColliders : MonoBehaviour
 {
@@ -8,11 +10,16 @@ public class ActivarColliders : MonoBehaviour
     public GameObject grup1;
     public GameObject grup4;
 
+
     public Collider colliderGrup1;
     public Collider colliderGrup4;
+    public Collider colliderFinal;
+
+
+  
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,7 +37,7 @@ public class ActivarColliders : MonoBehaviour
             if(other.gameObject.name == "ColliderGrup1")
             {
                 Debug.Log("Final Primer Grup TRUE");
-                grup1.GetComponent<SeguirNoia>().final = true;
+                grup1.GetComponent<SeguirNoia>().final = true;             
             }
 
             if (other.gameObject.name == "ColliderGrup4")
@@ -39,7 +46,13 @@ public class ActivarColliders : MonoBehaviour
                 grup4.GetComponent<SeguirNoia>().final = true;
             }
 
+            if (other.gameObject.name == "ColliderFinal")
+            {
+                Debug.Log("La noia ha arribat a casa");
+                SceneManager.LoadScene("Final");
+            }
 
-         }
+
+        }
     }
 }

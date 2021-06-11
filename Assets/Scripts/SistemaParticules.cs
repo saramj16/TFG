@@ -11,8 +11,13 @@ public class SistemaParticules : MonoBehaviour
         personatge = GameObject.FindGameObjectWithTag("Player");
 
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
-        { 
-            this.gameObject.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>().Stop();
+        {
+            GameObject aux = this.gameObject.transform.GetChild(i).gameObject;
+            for (int j = 0; j < aux.transform.childCount; j++)
+            {
+                //Debug.Log("Aux: " + aux.name);
+                aux.gameObject.transform.GetChild(j).gameObject.GetComponent<ParticleSystem>().Stop();
+            }
         }
     }
 
@@ -21,16 +26,18 @@ public class SistemaParticules : MonoBehaviour
     {
         for(int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            float dist = Vector3.Distance(personatge.transform.position, this.gameObject.transform.GetChild(i).position);
-           // Debug.Log("Distancia fill " + i + " : " + dist);
-            if (dist > 250f)
+            GameObject aux = this.gameObject.transform.GetChild(i).gameObject;
+            for (int j = 0; j < aux.transform.childCount; j++)
             {
-                this.gameObject.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>().Stop();
-            }
-            else
-            {
-                this.gameObject.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>().Play();
-            }
+                float dist = Vector3.Distance(personatge.transform.position, aux.gameObject.transform.GetChild(j).position);
+
+                if (dist > 300f)
+                {
+                    aux.gameObject.transform.GetChild(j).gameObject.GetComponent<ParticleSystem>().Stop();
+                } else {
+                    aux.gameObject.transform.GetChild(j).gameObject.GetComponent<ParticleSystem>().Play();
+                }
+            }            
         }
 
     }
