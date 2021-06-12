@@ -24,6 +24,9 @@ public class PosicionaKeys : MonoBehaviour
         if(other.gameObject.layer == 12)
         {
             Debug.Log("Collider:" + other.gameObject.name);
+
+            //El tio t'ha de respondre que que fas que estas boja i tal,
+            // Si li fas més cops igual acabes malament.
         }
         
     }
