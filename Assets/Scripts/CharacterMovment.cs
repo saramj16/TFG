@@ -70,8 +70,6 @@ public class CharacterMovment : MonoBehaviour
                 coolDown = true;
                 activaFast = false;
             }
-        } else {
-            speed = speedNormal;
         }
 
         if (coolDown == true)
@@ -81,11 +79,12 @@ public class CharacterMovment : MonoBehaviour
             {
                 coolDown = false;
             }
-        }
+        } 
     }
 
     void ActualitzaBarra()
     {
+      
         barra.rectTransform.sizeDelta = new Vector2(100 -(tiempo*20), 10);
     }
     void Moviment()
@@ -114,6 +113,10 @@ public class CharacterMovment : MonoBehaviour
     {
         anim.SetFloat("x", 0);
         anim.SetFloat("y", 0);
+
+        coolDown = true;
+        activaFast = false;
+        speed = speedNormal;
     }
     void ControlKeys()
     {
@@ -151,25 +154,34 @@ public class CharacterMovment : MonoBehaviour
     }
     void ControlVelocitat()
     {
-        if(coolDown == false)
-        {
+ 
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                //Debug.Log("Fast");
-                activaFast = true;
-                speed = speedFast;
+               
+                if(tiempo < 5)
+                {
+                    coolDown = false;
+                    activaFast = true;
+                    speed = speedFast;
+                } else
+                {
+                    coolDown = true;
+                    activaFast = false;
+                    speed = speedNormal;
+                }
             }
-        }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            //Debug.Log("Lento");
-            activaFast = false;
-            speed = speedNormal;
-            coolDown = true;
-        }
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                coolDown = true;
+                activaFast = false;
+                speed = speedNormal;
+            }
 
-    }
+
+
+
+        }
     public void AtacFalse()
     {
         //Debug.Log("JA NO ATAQUEM");

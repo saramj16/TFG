@@ -69,6 +69,7 @@ public class Missatges : MonoBehaviour
             if (nEstadistica + 1 == maxEstadistica)
             {
                 //Final del joc
+                
             }
             else
             {
