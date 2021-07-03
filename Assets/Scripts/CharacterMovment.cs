@@ -9,7 +9,7 @@ public class CharacterMovment : MonoBehaviour
     public CharacterController controller;
 
     float speed = 0f;
-    float speedNormal = 30f;
+    float speedNormal = 10f;
     float speedFast = 30f;
     float gravity = -9.81f;
 
@@ -31,6 +31,11 @@ public class CharacterMovment : MonoBehaviour
     
     Animator anim;
     public GameObject keys;
+
+    AudioSource step;
+    public AudioClip walk;
+    public AudioClip run;
+
     private void Start()
     {
         keys.gameObject.SetActive(false);
@@ -38,6 +43,8 @@ public class CharacterMovment : MonoBehaviour
         blockMovment = true;
         //Debug.Log("Nom: " + this.transform.GetChild(0).gameObject.name);
         anim = this.gameObject.GetComponent<Animator>();
+        step = this.gameObject.GetComponent<AudioSource>();
+
     }
 
     void Update()
@@ -49,7 +56,7 @@ public class CharacterMovment : MonoBehaviour
             if (blockMovment == true)
             {
                 Moviment();
-
+                
                 ControlVelocitat();
                 ControlTempsVelocitat();
                 ActualitzaBarra();
@@ -69,6 +76,7 @@ public class CharacterMovment : MonoBehaviour
             {
                 coolDown = true;
                 activaFast = false;
+                speed = speedNormal;
             }
         }
 
@@ -107,6 +115,16 @@ public class CharacterMovment : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+
+        
+        if ( x > 0 || y > 0)
+        {
+            stepSound();
+        } else
+        {
+            step.Stop();
+        }
+        
     }
 
     public void StopNoia()
@@ -117,6 +135,9 @@ public class CharacterMovment : MonoBehaviour
         coolDown = true;
         activaFast = false;
         speed = speedNormal;
+
+        step.Stop();
+        
     }
     void ControlKeys()
     {
@@ -206,5 +227,24 @@ public class CharacterMovment : MonoBehaviour
     {
         SceneManager.LoadScene("Final_Dolent");
         //Debug.Log("Pos rip pq tha violat");
+    }
+
+
+
+    public void stepSound()
+    {
+        Debug.Log("Step");
+
+        if (activaFast) {
+            step.clip = run;
+        } else {
+            step.clip = walk;
+        }
+        step.pitch = Random.Range(0.8f, 1.3f);
+        if (!step.isPlaying)
+        {
+            step.Play();
+        }
+        
     }
 }
