@@ -28,6 +28,8 @@ public class CharacterMovment : MonoBehaviour
     public GameObject panelResposta;
 
     public bool keysReady;
+
+    public bool respostaAmics = false;
     
     Animator anim;
     public GameObject keys;
@@ -35,6 +37,8 @@ public class CharacterMovment : MonoBehaviour
     AudioSource step;
     public AudioClip walk;
     public AudioClip run;
+
+    public GameObject uiMobil;
 
     private void Start()
     {
@@ -44,27 +48,24 @@ public class CharacterMovment : MonoBehaviour
         //Debug.Log("Nom: " + this.transform.GetChild(0).gameObject.name);
         anim = this.gameObject.GetComponent<Animator>();
         step = this.gameObject.GetComponent<AudioSource>();
-
+        respostaAmics = false;
+        uiMobil.SetActive(false);
     }
 
-    void Update()
-    {
-        
-        if (!panelDialeg.activeSelf && !panelResposta.activeSelf)
-        {
-
-            if (blockMovment == true)
-            {
+    void Update() {
+        if (!panelDialeg.activeSelf && !panelResposta.activeSelf) {
+            if (blockMovment == true) {
                 Moviment();
                 
                 ControlVelocitat();
                 ControlTempsVelocitat();
-                ActualitzaBarra();
+                //ActualitzaBarra();
+                ActivaUIMobil();
                 ControlKeys();
 
             }
-        } 
-        
+        }
+
     }
 
     void ControlTempsVelocitat()
@@ -90,6 +91,14 @@ public class CharacterMovment : MonoBehaviour
         } 
     }
 
+    void ActivaUIMobil()
+    {
+        if (Input.GetKeyUp(KeyCode.M))
+        {
+            uiMobil.SetActive(!uiMobil.activeSelf);
+        }
+    }
+
     void ActualitzaBarra()
     {
       
@@ -106,8 +115,6 @@ public class CharacterMovment : MonoBehaviour
         anim.SetFloat("x", x);
         anim.SetFloat("y", y);
       
-
-
         Vector3 movement = transform.right * x + transform.forward * y;
 
         controller.Move(movement * speed * Time.deltaTime);
@@ -116,19 +123,26 @@ public class CharacterMovment : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-        
+        Debug.Log("x and y: " + x + " / " + y);
+
         if ( x > 0 || y > 0)
         {
             stepSound();
         } else
         {
-            step.Stop();
+            //Debug.Log("Stop q no es fa ");
+            if(respostaAmics == false)
+            {
+                step.Stop();
+            }
+
         }
         
     }
 
     public void StopNoia()
     {
+        Debug.Log("Stop noia");
         anim.SetFloat("x", 0);
         anim.SetFloat("y", 0);
 
@@ -229,7 +243,17 @@ public class CharacterMovment : MonoBehaviour
         //Debug.Log("Pos rip pq tha violat");
     }
 
+    public void stopStepSound()
+    {
+        Debug.Log("Stop Step");
+        step.Stop();
+    }
 
+    public void playStepSound()
+    {
+        Debug.Log("Activa Step");
+        stepSound();
+    }
 
     public void stepSound()
     {
@@ -240,7 +264,7 @@ public class CharacterMovment : MonoBehaviour
         } else {
             step.clip = walk;
         }
-        step.pitch = Random.Range(0.8f, 1.3f);
+        step.pitch = Random.Range(0.6f, 1.6f);
         if (!step.isPlaying)
         {
             step.Play();

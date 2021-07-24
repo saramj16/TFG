@@ -11,6 +11,9 @@ public class ChangeLights : MonoBehaviour
     public int maxColor;
     public float tiempo = 0f;
     public float tiempoMax = 1f;
+    public float shiny = 5f;
+
+    public Light l;
 
     void Start()
     {
@@ -36,8 +39,17 @@ public class ChangeLights : MonoBehaviour
             }
 
             //Canviem el color
-            m.color = c[nColor];
-            m.SetColor("_EmissionColor", c[nColor]);
+            if(l != null)
+            {
+                l.color = c[nColor];
+                l.intensity = shiny;
+            }
+            if(m != null)
+            {
+                m.color = c[nColor];
+                m.SetColor("_EmissionColor", c[nColor] * shiny);
+            }
+
 
         }
     }

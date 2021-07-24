@@ -15,8 +15,6 @@ public class CameraSecundaria : MonoBehaviour
     public GameObject respostes;
     public GameObject nameText;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -29,10 +27,9 @@ public class CameraSecundaria : MonoBehaviour
     void Update()
     {
         MirarSiParlaAlgu();
-        if (desactivat == true)
-        {
+        if (desactivat == true) {
+            ApagarLlum();
             CopiaMainCamera();
-
         }
         else
         {
@@ -52,8 +49,8 @@ public class CameraSecundaria : MonoBehaviour
             this.gameObject.transform.LookAt(personatge.transform);
 
             // Debug.Log("camera secundaria activada: " + personatge.name);
-
-
+            //Activar les llums del personatge
+            EncendreLlum();
         }
     }
 
@@ -83,16 +80,36 @@ public class CameraSecundaria : MonoBehaviour
                 {
                     desactivat = false;
                     mainCamera.GetComponent<Camera>().enabled = false;
+                    ApagarLlum();
                     personatge = GameObject.Find("/Characters/Tu");
                 } else
                 {
                     desactivat = true;
                     mainCamera.GetComponent<Camera>().enabled = true;
+                    EncendreLlum();
                     personatge = null;
                 }  
             }
         }
 
+    }
+
+
+    void ApagarLlum()
+    {
+        if (personatge != null) {
+            if (personatge.transform.childCount > 0) {
+                personatge.transform.GetChild(0).gameObject.SetActive(false);
+            }
+        }
+    }
+    void EncendreLlum()
+    {
+        if (personatge != null) {
+            if (personatge.transform.childCount > 0) {
+                personatge.transform.GetChild(0).gameObject.SetActive(true);
+            }
+        }
     }
     void CopiaMainCamera()
     {
@@ -102,7 +119,7 @@ public class CameraSecundaria : MonoBehaviour
 
     void BuscarPersonatgeQueParla()
     {
-
+        ApagarLlum();
         personatge = GameObject.Find("/Characters/" + nameText.GetComponent<Text>().text);
         //Debug.Log("Ha trobat el personatge: " + nameText.GetComponent<Text>().text);
 

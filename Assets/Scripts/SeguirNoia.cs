@@ -13,7 +13,7 @@ public class SeguirNoia : MonoBehaviour
     public GameObject desconegut;
 
     public float tiempo = 0f;
-    public float tiempoMaxim = 5f;
+    public float tiempoMaxim = 4f;
 
     private Vector3 posicioIniciDesconegut;
 
@@ -53,6 +53,7 @@ public class SeguirNoia : MonoBehaviour
         //Debug.Log("Update");
         if (haArribat)
         {
+            float altura = desconegut.transform.position.y;
           //  Debug.Log("Personatge: " + personatge.name + " / Target: " + desconegut.name);
             float dist = Vector3.Distance(personatge.gameObject.transform.position, desconegut.transform.position);
           //  Debug.Log("Distancia: " + dist);
@@ -63,10 +64,9 @@ public class SeguirNoia : MonoBehaviour
                     float dot = Vector3.Dot(personatge.transform.forward, (desconegut.transform.position - personatge.transform.position).normalized);
                     if (dot < 0.7f)
                     {
-                        Debug.Log("Em moc");
+                        //Debug.Log("Em moc");
                         desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, personatge.transform.position, speed * Time.deltaTime);
-
-
+                        desconegut.transform.position = new Vector3(desconegut.transform.position.x, altura, desconegut.transform.position.z);
                     }
                 }
             }

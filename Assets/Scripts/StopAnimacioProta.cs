@@ -16,7 +16,11 @@ public class StopAnimacioProta : MonoBehaviour
     {
         if(this.gameObject.activeSelf == true)
         {
-            protagonista.gameObject.GetComponent<CharacterMovment>().StopNoia();
+            if(protagonista.gameObject.GetComponent<CharacterMovment>().respostaAmics == false)
+            {
+                protagonista.gameObject.GetComponent<CharacterMovment>().StopNoia();
+            }
+            
         }
     }
 }
