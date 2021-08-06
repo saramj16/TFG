@@ -7,7 +7,7 @@ public class CameraSecundaria : MonoBehaviour
 {
     public bool desactivat = true;
     public bool conversaAmics;
-
+    public bool conversaEnCurs = false;
     public GameObject mainCamera;
 
     GameObject personatge;
@@ -20,7 +20,7 @@ public class CameraSecundaria : MonoBehaviour
     {
         conversaAmics = false;
         personatge = null;
-        CopiaMainCamera();
+        //CopiaMainCamera();
     }
 
     // Update is called once per frame
@@ -29,26 +29,19 @@ public class CameraSecundaria : MonoBehaviour
         MirarSiParlaAlgu();
         if (desactivat == true) {
             ApagarLlum();
-            CopiaMainCamera();
+            //CopiaMainCamera();
         }
         else
         {
-            CopiaMainCamera();
+            if(personatge != null)
+            {
+                this.gameObject.transform.rotation = personatge.transform.rotation;
 
-            //Hauriem de fer un LookAt pero Smooth, aixo fa coses rares de moment
-            //Quaternion targetRotation = Quaternion.LookRotation(personatge.transform.position - transform.position);
-            // Smoothly rotate towards the target point.
-            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * Time.deltaTime);
-            //Debug.Log("Personatge: " + personatge.name);
-            //Debug.Log("Position: " + personatge.transform.position);
+                this.gameObject.transform.position = personatge.transform.position + personatge.transform.forward * 10 + personatge.transform.right * 4;
 
-            this.gameObject.transform.rotation = personatge.transform.rotation;
+                this.gameObject.transform.LookAt(personatge.transform);
+            }
 
-            this.gameObject.transform.position = personatge.transform.position + personatge.transform.forward * 10 + personatge.transform.right * 4;
-
-            this.gameObject.transform.LookAt(personatge.transform);
-
-            // Debug.Log("camera secundaria activada: " + personatge.name);
             //Activar les llums del personatge
             EncendreLlum();
         }
@@ -68,7 +61,7 @@ public class CameraSecundaria : MonoBehaviour
         }
         else
         {
-            if (missatges.activeSelf == true)
+            if (conversaEnCurs == true)
             {
                 desactivat = false;
                 mainCamera.GetComponent<Camera>().enabled = false;
@@ -76,19 +69,12 @@ public class CameraSecundaria : MonoBehaviour
                 //Debug.Log(personatge.name + " esta parlant");
 
             } else {
-                if(respostes.activeSelf == true)
-                {
-                    desactivat = false;
-                    mainCamera.GetComponent<Camera>().enabled = false;
-                    ApagarLlum();
-                    personatge = GameObject.Find("/Characters/Tu");
-                } else
-                {
-                    desactivat = true;
-                    mainCamera.GetComponent<Camera>().enabled = true;
-                    EncendreLlum();
-                    personatge = null;
-                }  
+                //Debug.Log("Desactiva la camera");
+                desactivat = true;
+                mainCamera.GetComponent<Camera>().enabled = true;
+                EncendreLlum();
+                personatge = null;
+
             }
         }
 
@@ -135,5 +121,15 @@ public class CameraSecundaria : MonoBehaviour
     {
 
         conversaAmics = false;
+    }
+
+    void ActivaConversaEnCurs()
+    {
+        conversaEnCurs = true;
+    }
+
+    void DesactivaConversaEnCurs()
+    {
+        conversaEnCurs = false;
     }
 }

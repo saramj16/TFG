@@ -11,6 +11,7 @@ public class SeguirNoia : MonoBehaviour
 
     public GameObject personatge;
     public GameObject desconegut;
+    public Animator animDesconegut;
 
     public float tiempo = 0f;
     public float tiempoMaxim = 4f;
@@ -18,6 +19,7 @@ public class SeguirNoia : MonoBehaviour
     private Vector3 posicioIniciDesconegut;
 
     private float speed = 8f;
+    Vector3 posicioAntiga;
 
     // Start is called before the first frame update
     void Start()
@@ -25,21 +27,18 @@ public class SeguirNoia : MonoBehaviour
         final = false;
         haArribat = false;
         posicioIniciDesconegut = desconegut.transform.position;
+        posicioAntiga = desconegut.transform.position;
     }
 
 
     private void OnTriggerExit(Collider other)
     {
-
         if(this.gameObject.transform.tag == colliderGrup.transform.tag)
         {
-            //Debug.Log("Tag: " + this.gameObject.transform.tag + " / Collider: " + colliderGrup.transform.tag);
             this.gameObject.GetComponent<BoxCollider>().enabled = false;
             
             personatge = other.gameObject;
-
         }
-
     }
 
     public void HaArribat()
@@ -48,15 +47,12 @@ public class SeguirNoia : MonoBehaviour
     }
     // Update is called once per frame
     void Update()
-    {
-        // Quan surti del collider faré que segueixi a la noia   
-        //Debug.Log("Update");
+    {       
         if (haArribat)
         {
             float altura = desconegut.transform.position.y;
-          //  Debug.Log("Personatge: " + personatge.name + " / Target: " + desconegut.name);
             float dist = Vector3.Distance(personatge.gameObject.transform.position, desconegut.transform.position);
-          //  Debug.Log("Distancia: " + dist);
+
             if (dist > 10f)
             {
                 if(final == false)
@@ -64,36 +60,31 @@ public class SeguirNoia : MonoBehaviour
                     float dot = Vector3.Dot(personatge.transform.forward, (desconegut.transform.position - personatge.transform.position).normalized);
                     if (dot < 0.7f)
                     {
-                        //Debug.Log("Em moc");
+                        
+                        desconegut.transform.LookAt(personatge.transform);
                         desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, personatge.transform.position, speed * Time.deltaTime);
                         desconegut.transform.position = new Vector3(desconegut.transform.position.x, altura, desconegut.transform.position.z);
+                        /*if (desconegut.transform.position != posicioAntiga)
+                        {
+                            animDesconegut.SetBool("walking", true);
+                            posicioAntiga = desconegut.transform.position;
+                        } else {
+                            animDesconegut.SetBool("walking", false);
+                        }*/
+                        
                     }
                 }
             }
 
             if(final == true)
             {
-                //Se'n torna cap a caseta o fem destroý
-
                 float dist_way = Vector3.Distance(personatge.gameObject.transform.position, desconegut.transform.position);
-
-
                 if (dist_way > 5f)
                 {
+                    desconegut.transform.LookAt(posicioIniciDesconegut);
                     desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, posicioIniciDesconegut, speed * Time.deltaTime);
-                }
-
-            } else {
-                /*
-                //Cada X segons dir alguna cosa
-                tiempo += Time.deltaTime;
-                if (tiempo >= tiempoMaxim)
-                {
-                    tiempo = 0;
-                    
-                    Debug.Log("Guarra");
-                }*/
-            }
+                } 
+            } 
 
         }
      

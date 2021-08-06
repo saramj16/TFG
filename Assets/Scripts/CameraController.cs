@@ -10,9 +10,6 @@ public class CameraController : MonoBehaviour
     float xRotation = 0f;
     float yRotation = 0f;
 
-    public GameObject panelDialeg;
-    public GameObject panelResposta;
-
     public GameObject cameraSecundaria;
 
     public float clamp;
@@ -28,7 +25,7 @@ public class CameraController : MonoBehaviour
     
     void Update()
     {
-        if (!panelDialeg.activeSelf && !panelResposta.activeSelf)
+        if (!cameraSecundaria.GetComponent<CameraSecundaria>().conversaEnCurs)
         {
             Cursor.visible = false;
             if (desactivat == false)

@@ -75,45 +75,19 @@ public class RespostaAmics : MonoBehaviour
         }
     }
 
-    void MourePersonatges(Vector3 p1, Vector3 p2, float velRotacio)
-    {
-        //Posicionar els amics tmb
-       
 
-        Quaternion rotationAmic2;
-        
-        //Debug.Log("Rotar amics personatge");
-        Quaternion rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
-        amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * velRotacio);
-        //stepSound(stepAmic1);
-
-        rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
-        amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * velRotacio);
-        //stepSound(stepAmic2);
-
-        if (amic2.transform.rotation == rotationAmic2){
-            posicionats = true;
-            //stepAmic1.Stop();
-            //stepAmic2.Stop();
-        }
-        
-
-    }
-
-    IEnumerator MourePersonatges2(Vector3 p1, Vector3 p2, float velRotacio)
+    IEnumerator MourePersonatge(Vector3 p1, Vector3 p2, float velRotacio)
     {
         //Posicionar els amics tmb
 
         Quaternion rotationAmic2 = Quaternion.LookRotation(p2);
         while (amic2.transform.rotation != rotationAmic2)
         {
-            //Debug.Log("Rotar amics personatge moure 2");
             Quaternion rotationAmic1 = Quaternion.LookRotation(p1 - amic1.transform.position);
             amic1.transform.rotation = Quaternion.RotateTowards(amic1.transform.rotation, rotationAmic1, Time.deltaTime * velRotacio);
 
             rotationAmic2 = Quaternion.LookRotation(p2 - amic2.transform.position);
             amic2.transform.rotation = Quaternion.RotateTowards(amic2.transform.rotation, rotationAmic2, Time.deltaTime * velRotacio);
-
 
             yield return null;
         }
@@ -152,7 +126,7 @@ public class RespostaAmics : MonoBehaviour
 
             //Posicionar els amics tmb
             //Debug.Log("Moure personatges 1");
-            StartCoroutine(MourePersonatges2(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position, 1f));
+            StartCoroutine(MourePersonatge(waypoints.gameObject.transform.GetChild(1).position, waypoints.gameObject.transform.GetChild(2).position, 1f));
 
             
             float dist = Vector3.Distance(target.gameObject.transform.position, waypoints.gameObject.transform.GetChild(0).position);
@@ -215,11 +189,11 @@ public class RespostaAmics : MonoBehaviour
             float dist_amic1 = Mathf.Abs(Vector3.Distance(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position));
             if (dist_amic1 > 5f)
             {                
-                this.gameObject.transform.GetChild(0).transform.position = Vector3.MoveTowards(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position, speed * Time.deltaTime);
+                this.gameObject.transform.GetChild(0).transform.position = 
+                    Vector3.MoveTowards(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position, speed * Time.deltaTime);
 
             } else {
                 animatorAmic1.SetBool("isWalking", false);
-                //Debug.Log("L'amic 1 se frena el maquina");
             }
 
             float dist_amic2 = Mathf.Abs(Vector3.Distance(amic2.transform.position, waypoints.gameObject.transform.GetChild(2).position));
@@ -248,7 +222,7 @@ public class RespostaAmics : MonoBehaviour
                 haArribat = true;
                 //target.gameObject.GetComponent<CharacterMovment>().stopStepSound();
                 target.gameObject.GetComponent<CharacterMovment>().StopNoia();
-                StartCoroutine(MourePersonatges2(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position, 20f));
+                StartCoroutine(MourePersonatge(waypoints.gameObject.transform.GetChild(4).position, waypoints.gameObject.transform.GetChild(5).position, 20f));
                 stepAmic1.Stop();
                 stepAmic2.Stop();
                

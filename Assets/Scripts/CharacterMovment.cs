@@ -39,6 +39,7 @@ public class CharacterMovment : MonoBehaviour
     public AudioClip run;
 
     public GameObject uiMobil;
+    public GameObject cameraMiniMapa;
 
     private void Start()
     {
@@ -53,6 +54,8 @@ public class CharacterMovment : MonoBehaviour
     }
 
     void Update() {
+
+        UpdateCameraMinimapa();
         if (!panelDialeg.activeSelf && !panelResposta.activeSelf) {
             if (blockMovment == true) {
                 Moviment();
@@ -66,6 +69,12 @@ public class CharacterMovment : MonoBehaviour
             }
         }
 
+    }
+
+    void UpdateCameraMinimapa()
+    {
+        float y = cameraMiniMapa.transform.position.y;
+        cameraMiniMapa.transform.position = new Vector3(this.gameObject.transform.position.x, y, this.gameObject.transform.position.z);
     }
 
     void ControlTempsVelocitat()
@@ -109,9 +118,6 @@ public class CharacterMovment : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 
-        //Debug.Log("X: " + x);
-        //Debug.Log("Y: " + y);
-       
         anim.SetFloat("x", x);
         anim.SetFloat("y", y);
       
@@ -123,14 +129,11 @@ public class CharacterMovment : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-        Debug.Log("x and y: " + x + " / " + y);
-
         if ( x > 0 || y > 0)
         {
             stepSound();
         } else
         {
-            //Debug.Log("Stop q no es fa ");
             if(respostaAmics == false)
             {
                 step.Stop();
