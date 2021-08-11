@@ -9,8 +9,8 @@ public class CharacterMovment : MonoBehaviour
     public CharacterController controller;
 
     float speed = 0f;
-    float speedNormal = 10f;
-    float speedFast = 30f;
+    float speedNormal = 15f;
+    float speedFast = 35f;
     float gravity = -9.81f;
 
     bool activaFast = false;
@@ -37,6 +37,7 @@ public class CharacterMovment : MonoBehaviour
     AudioSource step;
     public AudioClip walk;
     public AudioClip run;
+    public AudioSource breath;
 
     public GameObject uiMobil;
     public GameObject cameraMiniMapa;
@@ -86,6 +87,7 @@ public class CharacterMovment : MonoBehaviour
             {
                 coolDown = true;
                 activaFast = false;
+                breath.Play();
                 speed = speedNormal;
             }
         }
@@ -267,11 +269,13 @@ public class CharacterMovment : MonoBehaviour
         } else {
             step.clip = walk;
         }
-        step.pitch = Random.Range(0.6f, 1.6f);
+        step.pitch = Random.Range(0.8f, 1.8f);
         if (!step.isPlaying)
         {
             step.Play();
         }
         
     }
+
+
 }

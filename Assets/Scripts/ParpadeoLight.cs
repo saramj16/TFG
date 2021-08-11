@@ -11,10 +11,10 @@ public class ParpadeoLight : MonoBehaviour
     bool parpadeo = false;
     int numParpadeo = 0;
     int numMaxParpadeo = 6;
-    // Start is called before the first frame update
+
     void Start()
     {
-        //llum = this.gameObject.GetComponent<Light>();
+
     }
 
     // Update is called once per frame

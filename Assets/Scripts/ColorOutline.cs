@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class ColorOutline : MonoBehaviour
 {
     public GameObject textName;
-    private Outline outline;
+    private Text text;
     // Start is called before the first frame update
     void Start()
     {
-        outline = this.gameObject.GetComponent<Outline>();
+        text = this.gameObject.GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        outline.effectColor = textName.gameObject.GetComponent<Text>().color;
+        text.color = textName.gameObject.GetComponent<Text>().color;
     }
 }

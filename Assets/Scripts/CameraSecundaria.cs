@@ -33,14 +33,12 @@ public class CameraSecundaria : MonoBehaviour
         }
         else
         {
-            if(personatge != null)
-            {
-                this.gameObject.transform.rotation = personatge.transform.rotation;
 
-                this.gameObject.transform.position = personatge.transform.position + personatge.transform.forward * 10 + personatge.transform.right * 4;
+            this.gameObject.transform.rotation = personatge.transform.rotation;
 
-                this.gameObject.transform.LookAt(personatge.transform);
-            }
+            this.gameObject.transform.position = personatge.transform.position + personatge.transform.forward * 10 + personatge.transform.right * 4;
+
+            this.gameObject.transform.LookAt(personatge.transform);
 
             //Activar les llums del personatge
             EncendreLlum();
@@ -56,6 +54,7 @@ public class CameraSecundaria : MonoBehaviour
         {
             desactivat = true;
             mainCamera.GetComponent<Camera>().enabled = true;
+            ApagarLlum();
             personatge = null;
 
         }
@@ -72,7 +71,7 @@ public class CameraSecundaria : MonoBehaviour
                 //Debug.Log("Desactiva la camera");
                 desactivat = true;
                 mainCamera.GetComponent<Camera>().enabled = true;
-                EncendreLlum();
+                ApagarLlum();
                 personatge = null;
 
             }
@@ -81,7 +80,7 @@ public class CameraSecundaria : MonoBehaviour
     }
 
 
-    void ApagarLlum()
+    public void ApagarLlum()
     {
         if (personatge != null) {
             if (personatge.transform.childCount > 0) {
@@ -89,7 +88,7 @@ public class CameraSecundaria : MonoBehaviour
             }
         }
     }
-    void EncendreLlum()
+    public void EncendreLlum()
     {
         if (personatge != null) {
             if (personatge.transform.childCount > 0) {
@@ -105,8 +104,11 @@ public class CameraSecundaria : MonoBehaviour
 
     void BuscarPersonatgeQueParla()
     {
-        ApagarLlum();
+        if(personatge != null){
+            ApagarLlum();
+        }
         personatge = GameObject.Find("/Characters/" + nameText.GetComponent<Text>().text);
+        EncendreLlum();
         //Debug.Log("Ha trobat el personatge: " + nameText.GetComponent<Text>().text);
 
     }

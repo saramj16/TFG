@@ -43,18 +43,10 @@ public class CameraController : MonoBehaviour
 
                 transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
                 player.Rotate(Vector3.up * mouseX);
-            } else
-            {
-                //Activar l'altre camera?
-                //cameraSecundaria.gameObject.GetComponent<CameraSecundaria>().desactivat = false;
-                //this.gameObject.GetComponent<Camera>().enabled = false;
-                
-                //transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
             }
         } else
         {
             Cursor.visible = true;
-
         }
     
     }

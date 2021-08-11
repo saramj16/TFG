@@ -28,6 +28,8 @@ public class RespostaAmics : MonoBehaviour
     public GameObject childCamera;
 
     public AudioSource stepAmic1, stepAmic2;
+
+    float altura;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,7 @@ public class RespostaAmics : MonoBehaviour
 
         amic1 = this.gameObject.transform.GetChild(0).gameObject;
         amic2 = this.gameObject.transform.GetChild(1).gameObject;
+        altura = amic1.gameObject.transform.position.y;
 
         animatorAmic1 = this.gameObject.transform.GetChild(0).gameObject.GetComponent<Animator>();
         animatorAmic2 = this.gameObject.transform.GetChild(1).gameObject.GetComponent<Animator>();
@@ -115,6 +118,7 @@ public class RespostaAmics : MonoBehaviour
                 target.gameObject.GetComponent<CharacterMovment>().playStepSound();
             }
             target.transform.position = Vector3.MoveTowards(target.transform.position, waypoints.gameObject.transform.GetChild(0).position, (speed / 2) * Time.deltaTime);
+            target.transform.position = new Vector3(target.transform.position.x, altura, target.transform.position.z);
 
             Vector3 puntMig = amic2.transform.position - amic1.transform.position;
             puntMig.x = amic1.transform.position.x + (puntMig.x / 2);
@@ -184,14 +188,13 @@ public class RespostaAmics : MonoBehaviour
 
             target.gameObject.GetComponent<CharacterMovment>().playStepSound();
             target.transform.position = Vector3.MoveTowards(target.transform.position, waypoints.gameObject.transform.GetChild(3).position, speed * Time.deltaTime);
-
+            target.transform.position = new Vector3(target.transform.position.x, altura, target.transform.position.z);
             //Hem de mirar la distancia de cadascun per fer que ja no es moguin
             float dist_amic1 = Mathf.Abs(Vector3.Distance(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position));
             if (dist_amic1 > 5f)
-            {                
-                this.gameObject.transform.GetChild(0).transform.position = 
-                    Vector3.MoveTowards(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position, speed * Time.deltaTime);
-
+            {
+                amic1.transform.position = Vector3.MoveTowards(amic1.transform.position, waypoints.gameObject.transform.GetChild(1).position, speed * Time.deltaTime);
+                amic1.transform.position = new Vector3(amic1.transform.position.x, altura, amic1.transform.position.z);
             } else {
                 animatorAmic1.SetBool("isWalking", false);
             }
@@ -199,7 +202,8 @@ public class RespostaAmics : MonoBehaviour
             float dist_amic2 = Mathf.Abs(Vector3.Distance(amic2.transform.position, waypoints.gameObject.transform.GetChild(2).position));
             if (dist_amic2 > 5f)
             {
-                this.gameObject.transform.GetChild(1).transform.position = Vector3.MoveTowards(amic2.transform.position, waypoints.gameObject.transform.GetChild(2).position, speed * Time.deltaTime);
+                amic2.transform.position = Vector3.MoveTowards(amic2.transform.position, waypoints.gameObject.transform.GetChild(2).position, speed * Time.deltaTime);
+                amic2.transform.position = new Vector3(amic2.transform.position.x, altura, amic2.transform.position.z);
             }
             else {
                 animatorAmic2.SetBool("isWalking", false);
@@ -226,7 +230,7 @@ public class RespostaAmics : MonoBehaviour
                 stepAmic1.Stop();
                 stepAmic2.Stop();
                
-                Invoke("CanviaOption", 5f);
+                Invoke("CanviaOption", 8f);
                 
                 
             }
@@ -267,6 +271,8 @@ public class RespostaAmics : MonoBehaviour
             stepSound(stepAmic2);
             amic1.transform.position = Vector3.MoveTowards(amic1.transform.position, waypoints.gameObject.transform.GetChild(4).position, speed * Time.deltaTime);
             amic2.transform.position = Vector3.MoveTowards(amic2.transform.position, waypoints.gameObject.transform.GetChild(5).position, speed * Time.deltaTime);
+            amic1.transform.position = new Vector3(amic1.transform.position.x, altura, amic1.transform.position.z);
+            amic2.transform.position = new Vector3(amic2.transform.position.x, altura, amic2.transform.position.z);
 
             Vector3 puntMig = amic2.transform.position - amic1.transform.position;
             puntMig.x = amic1.transform.position.x + (puntMig.x / 2);

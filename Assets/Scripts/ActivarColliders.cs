@@ -15,18 +15,7 @@ public class ActivarColliders : MonoBehaviour
     public Collider colliderGrup4;
     public Collider colliderFinal;
 
-
-  
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public BoxCollider porter;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -36,23 +25,36 @@ public class ActivarColliders : MonoBehaviour
         {
             if(other.gameObject.name == "ColliderGrup1")
             {
-                Debug.Log("Final Primer Grup TRUE");
+                //Debug.Log("Final Primer Grup TRUE");
                 grup1.GetComponent<SeguirNoia>().final = true;             
             }
 
             if (other.gameObject.name == "ColliderGrup4")
             {
-                Debug.Log("Final Quart Grup TRUE");
+                //Debug.Log("Final Quart Grup TRUE");
                 grup4.GetComponent<SeguirNoia>().final = true;
             }
 
             if (other.gameObject.name == "ColliderFinal")
             {
-                Debug.Log("La noia ha arribat a casa");
+                //Debug.Log("La noia ha arribat a casa");
                 SceneManager.LoadScene("Final");
             }
-
-
         }
+
+        if(other.gameObject.tag == "SegonGrup")
+        {
+            other.gameObject.GetComponent<Collider>().enabled = false;
+        }
+
+        if (other.gameObject.tag == "TercerGrup")
+        {
+            other.gameObject.GetComponent<Collider>().enabled = false;
+        }
+    }
+
+    public void DesactivaPorter()
+    {
+        porter.GetComponent<BoxCollider>().enabled = false;
     }
 }
