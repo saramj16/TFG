@@ -42,6 +42,10 @@ public class CharacterMovment : MonoBehaviour
     public GameObject uiMobil;
     public GameObject cameraMiniMapa;
 
+    public Camera cameraMobil;
+    public Camera cameraPrincipal;
+    public Animator controllerMobil;
+
     private void Start()
     {
         keys.gameObject.SetActive(false);
@@ -52,10 +56,11 @@ public class CharacterMovment : MonoBehaviour
         step = this.gameObject.GetComponent<AudioSource>();
         respostaAmics = false;
         uiMobil.SetActive(false);
+        cameraPrincipal.gameObject.SetActive(true);
+        cameraMobil.gameObject.SetActive(false);
     }
 
     void Update() {
-
         UpdateCameraMinimapa();
         if (!panelDialeg.activeSelf && !panelResposta.activeSelf) {
             if (blockMovment == true) {
@@ -63,13 +68,13 @@ public class CharacterMovment : MonoBehaviour
                 
                 ControlVelocitat();
                 ControlTempsVelocitat();
-                //ActualitzaBarra();
                 ActivaUIMobil();
-                ControlKeys();
-
+                //ControlKeys();
             }
+        } else
+        {
+            DesactivaUIMobil();
         }
-
     }
 
     void UpdateCameraMinimapa()
@@ -106,15 +111,42 @@ public class CharacterMovment : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.M))
         {
-            uiMobil.SetActive(!uiMobil.activeSelf);
+            if (cameraMobil.gameObject.activeSelf == true)
+            {
+                //Debug.Log("La camera esta activada i s'ha de desactivar");
+                controllerMobil.SetBool("treureMobil", false);
+                Invoke("DesactivaCameraMobil", 1.2f);
+            } else
+            {
+                //Debug.Log("La camera esta DESACTIVADA");
+                uiMobil.SetActive(true);
+                cameraMobil.gameObject.SetActive(true);
+                cameraPrincipal.gameObject.SetActive(false);
+                controllerMobil.SetBool("treureMobil", true);
+
+            }
+
+            
+            
+            
         }
     }
 
-    void ActualitzaBarra()
+    void DesactivaCameraMobil()
     {
-      
-        barra.rectTransform.sizeDelta = new Vector2(100 -(tiempo*20), 10);
+        uiMobil.SetActive(!uiMobil.activeSelf);
+        cameraMobil.gameObject.SetActive(!cameraMobil.gameObject.activeSelf);
+        cameraPrincipal.gameObject.SetActive(!cameraPrincipal.gameObject.activeSelf);
     }
+
+    void DesactivaUIMobil()
+    {
+        cameraMobil.gameObject.SetActive(false);
+        cameraPrincipal.gameObject.SetActive(true);
+        uiMobil.SetActive(false);
+
+    }
+
     void Moviment()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -123,26 +155,19 @@ public class CharacterMovment : MonoBehaviour
         anim.SetFloat("x", x);
         anim.SetFloat("y", y);
       
-        Vector3 movement = transform.right * x + transform.forward * y;
-
-        controller.Move(movement * speed * Time.deltaTime);
+        Vector3 moviment = transform.right * x + transform.forward * y;
+        controller.Move(moviment * speed * Time.deltaTime);
 
         velocity.y += gravity * Time.deltaTime;
-
         controller.Move(velocity * Time.deltaTime);
 
-        if ( x > 0 || y > 0)
-        {
+        if ( x > 0 || y > 0) {
             stepSound();
-        } else
-        {
-            if(respostaAmics == false)
-            {
+        } else {
+            if(respostaAmics == false) {
                 step.Stop();
             }
-
-        }
-        
+        }  
     }
 
     public void StopNoia()

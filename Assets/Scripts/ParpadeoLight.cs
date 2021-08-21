@@ -4,54 +4,33 @@ using UnityEngine;
 
 public class ParpadeoLight : MonoBehaviour
 {
-    public Light llum;
-    public float tiempo = 0f;
-    public float tiempoMax = 1f;
-    public float tiempoParpadeo = 0.1f;
-    bool parpadeo = false;
-    int numParpadeo = 0;
-    int numMaxParpadeo = 6;
+    float base1 = 0.0f; // start
+    float amplitude = 1.0f; // amplitude of the wave
+    float phase = 0.0f; // start point inside on wave cycle
+    float frequency = 0.5f; // cycle frequency per second
 
+    private Color originalColor;
     void Start()
     {
-
+        originalColor = GetComponent<Light>().color;
     }
 
     // Update is called once per frame
     void Update()
     {
-            tiempo += Time.deltaTime;
+        Light light = GetComponent<Light>();
+        light.color = originalColor * (Wave());
+    }
 
-            if (tiempo >= tiempoParpadeo)
-            {
-                if (numParpadeo == numMaxParpadeo)
-                {
-                    //Encenem la llum
-                    llum.gameObject.SetActive(true);
-                    parpadeo = false;
-                    numParpadeo = 0;
-                    tiempo = 0;
-                }
-                else
-                {
-                    //Contrari de si la llum està oberta o tancada
-                    bool estat = llum.gameObject.activeSelf;
-                    llum.gameObject.SetActive(!estat);
-                    numParpadeo++;
-                    tiempo = 0;
-                }
-            }
-            else
-            {
-                if (tiempo >= tiempoMax)
-                {
-                    tiempo = 0;
-                    //Activem el parpadeo
-                    parpadeo = true;
+    float Wave()
+    {
+        float x = (Time.time + phase) * frequency;
+        float y;
 
-                }
-            }
+        x = x - Mathf.Floor(x); // normalized value (0..1)
 
-       
+        y = 1 - (Random.value * 2);
+
+        return (y * amplitude) + base1;
     }
 }

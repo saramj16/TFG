@@ -23,13 +23,10 @@ public class CameraController : MonoBehaviour
     }
 
     
-    void Update()
-    {
-        if (!cameraSecundaria.GetComponent<CameraSecundaria>().conversaEnCurs)
-        {
+    void Update() {
+        if (!cameraSecundaria.GetComponent<CameraSecundaria>().conversaEnCurs) {
             Cursor.visible = false;
-            if (desactivat == false)
-            {
+            if (desactivat == false) {
                 this.gameObject.GetComponent<Camera>().enabled = true;
 
                 float mouseX = Input.GetAxis("Mouse X") * sensibilitatMouse * Time.deltaTime;
@@ -44,11 +41,9 @@ public class CameraController : MonoBehaviour
                 transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
                 player.Rotate(Vector3.up * mouseX);
             }
-        } else
-        {
+        } else {
             Cursor.visible = true;
         }
-    
     }
 
     public void OnHaDeMirar(GameObject cam)

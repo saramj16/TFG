@@ -55,59 +55,44 @@ public class SeguirNoia : MonoBehaviour
         haArribat = true;
     }
     // Update is called once per frame
-    void Update()
-    {       
-        if (haArribat)
-        {
+    void Update() {       
+        if (haArribat) {
             float dist = Vector3.Distance(personatge.gameObject.transform.position, desconegut.transform.position);
 
-            if (dist > 10f)
-            {
-                if(final == false)
-                {
+            if (dist > 10f) {
+                if(final == false) {
                     float dot = Vector3.Dot(personatge.transform.forward, (desconegut.transform.position - personatge.transform.position).normalized);
-                    if (dot < 0.7f)
-                    {
+                    if (dot < 0.7f) {
                         desconegut.transform.LookAt(personatge.transform);
                         desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, personatge.transform.position, speed * Time.deltaTime);
                         desconegut.transform.position = new Vector3(desconegut.transform.position.x, altura, desconegut.transform.position.z);
-                        if (desconegut.transform.position != posicioAntiga)
-                        {
-                            //Debug.Log("Activa true del parguelas q camina");
+                        if (desconegut.transform.position != posicioAntiga) {
                             animDesconegut.SetBool("walking", true);
                             stepSound(audioSourceDesconegut);
                             posicioAntiga = desconegut.transform.position;
                         } else {
-                            //Debug.Log("False");
                             animDesconegut.SetBool("walking", false);
                             audioSourceDesconegut.Stop();
                         }
-
                     }
-                    else
-                    {
-                        //Debug.Log("Esta entrant aqui?");
+                    else {
                         animDesconegut.SetBool("walking", false);
                         audioSourceDesconegut.Stop();
                     }
                 }
-            } else
-            {
+            } else {
                 animDesconegut.SetBool("walking", false);
                 audioSourceDesconegut.Stop();
             }
 
-            if(final == true)
-            {
+            if(final == true) {
                 float dist_way = Vector3.Distance(personatge.gameObject.transform.position, desconegut.transform.position);
-                if (dist_way > 5f)
-                {
+                if (dist_way > 5f) {
                     desconegut.transform.LookAt(posicioIniciDesconegut);
                     desconegut.transform.position = Vector3.MoveTowards(desconegut.transform.position, posicioIniciDesconegut, speed * Time.deltaTime);
                     animDesconegut.SetBool("walking", true);
                     stepSound(audioSourceDesconegut);
-                } else
-                {
+                } else {
                     animDesconegut.SetBool("walking", false);
                     audioSourceDesconegut.Stop();
                 }
